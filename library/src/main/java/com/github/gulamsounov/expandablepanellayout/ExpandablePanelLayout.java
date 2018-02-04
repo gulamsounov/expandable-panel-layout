@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.FrameLayout;
@@ -28,6 +29,7 @@ public class ExpandablePanelLayout extends FrameLayout implements ValueAnimator.
 
     private void setCurrentState(State state) {
         currentState = state;
+        Log.d("ExpandablePanelLayout", onChangeState == null ? "Null onChangeState" : "Not null onChangeState");
         if (onChangeState != null) {
             onChangeState.onChange(state);
         }

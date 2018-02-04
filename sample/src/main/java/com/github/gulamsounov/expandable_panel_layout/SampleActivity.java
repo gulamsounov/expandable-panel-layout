@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.github.gulamsounov.expandablepanellayout.ExpandablePanelLayout;
+import com.github.gulamsounov.expandablepanellayout.OnChangeState;
+import com.github.gulamsounov.expandablepanellayout.State;
 
 public class SampleActivity extends AppCompatActivity {
 
@@ -19,6 +21,12 @@ public class SampleActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 expandablePanelLayout.toggle();
+            }
+        });
+        expandablePanelLayout.setOnChangeState(new OnChangeState() {
+            @Override
+            public void onChange(State state) {
+                state.toString();
             }
         });
     }
