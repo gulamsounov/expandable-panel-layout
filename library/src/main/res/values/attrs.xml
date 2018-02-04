@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ExpandablePanelLayout">
+        <attr name="epl_expanded" format="boolean"/>
+        <attr name="epl_duration" format="integer"/>
+    </declare-styleable>
+</resources>
