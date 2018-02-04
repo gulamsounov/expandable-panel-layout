@@ -31,7 +31,7 @@ public class ExpandablePanelLayout extends FrameLayout implements ValueAnimator.
                 currentState = State.EXPAND;
             } else {
                 expansion = 0.0f;
-                currentState = State.COLLAPSING;
+                currentState = State.COLLAPSE;
             }
             duration = typedArray.getInt(R.styleable.ExpandablePanelLayout_epl_duration, DEFAULT_DURATION);
             typedArray.recycle();
