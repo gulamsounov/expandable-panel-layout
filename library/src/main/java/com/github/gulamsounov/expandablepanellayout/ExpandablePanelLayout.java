@@ -10,16 +10,28 @@ import android.view.animation.AccelerateInterpolator;
 import android.widget.FrameLayout;
 
 public class ExpandablePanelLayout extends FrameLayout implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener {
-
-    private enum State {COLLAPSE, COLLAPSING, EXPAND, EXPANDING}
-
-    ;
     private static final int DEFAULT_DURATION = 300;
     private static final boolean DEFAULT_EXPANDED = true;
     private float expansion = 0.0f;
     private State currentState = State.COLLAPSE;
     private ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1);
     private int duration = 300;
+    private OnChangeState onChangeState;
+
+    public void setOnChangeState(OnChangeState onChangeState) {
+        this.onChangeState = onChangeState;
+    }
+
+    public State getCurrentState() {
+        return currentState;
+    }
+
+    private void setCurrentState(State state) {
+        currentState = state;
+        if (onChangeState != null) {
+            onChangeState.onChange(state);
+        }
+    }
 
     public ExpandablePanelLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -44,6 +56,7 @@ public class ExpandablePanelLayout extends FrameLayout implements ValueAnimator.
         valueAnimator.addUpdateListener(this);
         valueAnimator.addListener(this);
         valueAnimator.setDuration(duration);
+        setOnChangeState(null);
     }
 
     @Override
@@ -59,28 +72,27 @@ public class ExpandablePanelLayout extends FrameLayout implements ValueAnimator.
         for (int i = 0; i < getChildCount(); i++) {
             View child = getChildAt(i);
             child.setTranslationY(deltaHeight);
-
         }
 
         setMeasuredDimension(width, newHeight);
     }
 
     public void collapse() {
-        if (currentState != State.EXPAND) {
+        if (getCurrentState() != State.EXPAND) {
             return;
         }
         valueAnimator.reverse();
     }
 
     public void expand() {
-        if (currentState != State.COLLAPSE) {
+        if (getCurrentState() != State.COLLAPSE) {
             return;
         }
         valueAnimator.start();
     }
 
     public void toggle() {
-        switch (currentState) {
+        switch (getCurrentState()) {
             case COLLAPSE:
                 expand();
                 break;
@@ -100,10 +112,10 @@ public class ExpandablePanelLayout extends FrameLayout implements ValueAnimator.
     public void onAnimationStart(Animator animation) {
         switch (currentState) {
             case COLLAPSE:
-                currentState = State.EXPANDING;
+                setCurrentState(State.EXPANDING);
                 break;
             case EXPAND:
-                currentState = State.COLLAPSING;
+                setCurrentState(State.COLLAPSING);
                 break;
         }
     }
@@ -112,10 +124,11 @@ public class ExpandablePanelLayout extends FrameLayout implements ValueAnimator.
     public void onAnimationEnd(Animator animation) {
         switch (currentState) {
             case EXPANDING:
-                currentState = State.EXPAND;
+                setCurrentState(State.EXPAND);
                 break;
             case COLLAPSING:
-                currentState = State.COLLAPSE;
+                setCurrentState(State.COLLAPSE);
+                break;
         }
     }
 
